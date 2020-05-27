@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+</head>
+<body>
+  <script>
+    const maxPoint = 20;
+    const minPoint = 5;
+
+    const hitPoint = () => {
+      let point = Math.floor(Math.random() * (maxPoint - minPoint)) + minPoint;
+      return point;
+    };
+    
+    const randomPoint = () => {
+      let point = Math.floor(Math.random() * (maxPoint - minPoint)) + 1;
+      return point;
+    };
+
+    const charaA = { name: 'マリオ' };
+    const charaB = { name: 'クッパ' };
+
+    class Charactor {
+      constructor(chara) {
+        this.name = chara.name;
+        this.hp = hitPoint();
+      }
+
+      set hp(point) {
+        this._hp = point;
+      }
+
+      get hp() {
+        return this._hp;
+      }
+
+      attack(rival) {
+        let myPower = randomPoint();
+        let rivalGuard = randomPoint();
+        console.log(`${this.name}の攻撃！\n[${this.name}の攻撃力:${myPower} / ${rival.name}の防御力:${rivalGuard}]`);
+        let damagePoint = myPower - rivalGuard;
+        if(damagePoint <= 0) {
+          damagePoint = 1;
+        }
+        console.log(`${rival.name}に${damagePoint}のダメージを与えた！`);
+        let point = rival.hp -damagePoint;
+        if(point > 0) {
+          return point;
+        } else {
+          return 0;
+        }
+      }
+
+      guard(rival) {
+        let myGuard = randomPoint();
+        let rivalPower = randomPoint();
+        console.log(`${this.name}は${rival.name}の攻撃を受けた！\n[${this.name}の防御力:${myGuard} / ${rival.name}の攻撃力:${rivalPower}]`);
+        let guardPoint = rivalPower - myGuard;
+        if(guardPoint <= 0) {
+          guardPoint = 1;
+        }
+        console.log(`${guardPoint}のダメージを受けた！`);
+        let point = this.hp - guardPoint;
+        if(point > 0) {
+          return point;
+        } else {
+          return 0;
+        }
+      }
+    }
+
+    const hero = new Charactor(charaA);
+    const enemy = new Charactor(charaB);
+    console.log(`${hero.name}のHP:${hero.hp}`);
+    console.log(`${enemy.name}のHP:${enemy.hp}`);
+
+    let heroPoint = hero.hp;
+    let kuppaPoint = enemy.hp;
+
+    while(heroPoint > 0 && kuppaPoint > 0) {
+      enemy.hp = hero.attack(enemy);
+      hero.hp = hero.guard(enemy);
+      console.log(`${hero.name}のHPは${hero.hp}になった`);
+      console.log(`${enemy.name}のHPは${enemy.hp}になった`);
+      heroPoint = hero.hp;
+      kuppaPoint = enemy.hp;
+    }
+
+    if(heroPoint > kuppaPoint) {
+      console.log(`${hero.name}の勝利！`);
+    } else if(heroPoint < kuppaPoint) {
+      console.log(`${enemy.name}の勝利！`);
+    } else {
+      console.log(`引き分け！`);
+    }
+  </script>
+</body>
+</html>
